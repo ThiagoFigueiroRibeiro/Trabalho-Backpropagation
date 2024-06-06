@@ -85,7 +85,7 @@ class NeuralNetwork:
         # Inicialização dos arrays de treino, validação e loss
         train_errors = []
         val_errors = []
-        loss_array = []
+        #loss_array = []
         consecutive_increases = 0
 
         #Para a quantidade de épocas...
@@ -95,10 +95,10 @@ class NeuralNetwork:
             output = self.forward(X_train)
 
             # Cálculo da função loss
-            loss = self.compute_loss(y_train, output)
-            loss_array.append(loss)
-            if epoch % 100 == 0:
-                print(f'Epoch {epoch}, Loss: {loss}')
+            #loss = self.compute_loss(y_train, output)
+            #loss_array.append(loss)
+            #if epoch % 100 == 0:
+            #    print(f'Epoch {epoch}, Loss: {loss}')
 
             # Backward propagation
             self.backward(X_train, y_train, output)
@@ -137,23 +137,14 @@ class NeuralNetwork:
                 break
             
             '''
-        
-         
-        # Criação das figuras
-        fig, axs = plt.subplots(2)
 
-        # Plotando a figura do Loss
-        axs[0].plot(loss_array, label='Loss')
-        axs[0].set_xlabel('Epochs')
-        axs[0].set_ylabel('Loss')
-        axs[0].legend()
 
         # Plotando a figura do erro de treino e erro de validação
-        axs[1].plot(train_errors, label='Training Error')
-        axs[1].plot(val_errors, label='Validation Error')
-        axs[1].set_xlabel('Epochs')
-        axs[1].set_ylabel('Mean Squared Error')
-        axs[1].legend()
+        plt.plot(train_errors, label='Training Error')
+        plt.plot(val_errors, label='Validation Error')
+        plt.xlabel('Epochs')
+        plt.ylabel('Mean Squared Error')
+        plt.legend()
 
         plt.tight_layout()
         plt.show()
