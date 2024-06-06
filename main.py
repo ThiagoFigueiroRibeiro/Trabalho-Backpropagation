@@ -14,6 +14,18 @@ def purelin(x):
 def purelin_derivative(x):
     return np.ones_like(x)
 
+def relu(x):
+  return np.maximum(0, x)
+
+def relu_derivative(x):
+  return np.where(x > 0, 1, 0)
+    
+def step_function(x, threshold=0):
+  return (x >= threshold) * 1
+
+def step_function_derivative(x, threshold=0):
+  return 2.0 * (x > threshold)
+
 # Criando a rede neural
 class NeuralNetwork:
     def __init__(self, input_size, hidden_size, output_size, learning_rate):
@@ -109,7 +121,7 @@ class NeuralNetwork:
             else:
                 consecutive_increases = 0
 
-            if consecutive_increases >= early_stop_threshold:
+            if consecutive_increases == early_stop_threshold:
                 break
 
             '''
@@ -173,10 +185,10 @@ def treinar():
 
     # Criando os parâmetros da rede
     input_size = 5
-    hidden_size = 5
+    hidden_size = 10
     output_size = 1
-    learning_rate = 0.1
-    epochs = 50
+    learning_rate = 0.01
+    epochs = 500
     early_stop_threshold = 5
 
     # Criando uma instância da rede com base nos dados acima
@@ -197,7 +209,7 @@ def treinar():
     # Comparando os resultados da rede treinada com os dados de teste
     test_output = nn.predict(X_test)
     test_error = np.mean(np.square(y_test - test_output))
-    print("Test Error:", test_error)
+    print("Acurácia:", 1 - test_error)
 
 def main():
     i = 0
@@ -207,3 +219,4 @@ def main():
         i+=1
 if __name__ == "__main__":
     main()
+
