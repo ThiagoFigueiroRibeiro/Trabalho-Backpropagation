@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import copy
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 # Criando as funções de ativação
 def sigmoid(x):
@@ -26,6 +28,16 @@ def step_function(x, threshold=0):
 def step_function_derivative(x, threshold=0):
   return 2.0 * (x > threshold)
 
+def softmax(x):
+    """Compute softmax values for each sets of scores in x."""
+    exp_x = np.exp(x - np.max(x)) # Subtracting the maximum value for numerical stability
+    return exp_x / exp_x.sum(axis=0)
+
+def softmax_derivative(x):
+    """Compute the derivative of softmax function."""
+    s = softmax(x)
+    return s * (1 - s)
+
 # Criando a rede neural
 class NeuralNetwork:
     def __init__(self, input_size, hidden_size, output_size, learning_rate):
@@ -36,10 +48,10 @@ class NeuralNetwork:
         self.learning_rate = learning_rate
 
         # Inicializando os pesos
-        self.weights_input_hidden = np.random.uniform(-1, 1, size=(self.input_size, self.hidden_size))
+        self.weights_input_hidden = np.random.uniform(-10, 10, size=(self.input_size, self.hidden_size))
         self.weights_input_hidden_before = copy.copy(self.weights_input_hidden)
 
-        self.weights_hidden_output = np.random.uniform(-1, 1, size=(self.hidden_size, self.output_size))
+        self.weights_hidden_output = np.random.uniform(-10, 10, size=(self.hidden_size, self.output_size))
         self.weights_hidden_output_before = copy.copy(self.weights_hidden_output)
 
     # Criando o Feed forward
@@ -176,10 +188,10 @@ def treinar():
 
     # Criando os parâmetros da rede
     input_size = 5
-    hidden_size = 10
+    hidden_size = 5
     output_size = 1
     learning_rate = 0.01
-    epochs = 500
+    epochs = 10000
     early_stop_threshold = 5
 
     # Criando uma instância da rede com base nos dados acima
@@ -200,7 +212,18 @@ def treinar():
     # Comparando os resultados da rede treinada com os dados de teste
     test_output = nn.predict(X_test)
     test_error = np.mean(np.square(y_test - test_output))
-    print("Acurácia:", 1 - test_error)
+    print("Erro médio quadrático:", 1 - test_error)
+    
+    accuracy = accuracy_score(np.round(y_test), np.round(test_output))
+    print(f"Acurácia: {accuracy}")
+    
+    cm = confusion_matrix(np.round(y_test), np.round(test_output))
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot()
+    plt.title("Confusion Matrix")
+    plt.xlabel("Predicted Label")
+    plt.ylabel("True Label")
+    plt.show()
 
 def main():
     i = 0
